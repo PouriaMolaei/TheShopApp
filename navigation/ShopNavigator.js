@@ -1,17 +1,24 @@
-import { createAppContainer } from 'react-navigation';
+import React from 'react';
+import {
+    View,
+    StyleSheet,
+    SafeAreaView,
+    Button
+} from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import ProductOverviewScreen from '../screens/shop/ProductOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
+import AuthScreen from '../screens/user/AuthScreen';
 import Colors from '../contants/Colors';
 import Constants from 'expo-constants';
-import { DrawerItems } from 'react-navigation-drawer';
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/actions/auth';
 import { Ionicons } from '@expo/vector-icons';
 
 const defaultNavOptions = {
@@ -75,18 +82,59 @@ const AdminNavigator = createStackNavigator({
     defaultNavigationOptions: defaultNavOptions
 });
 
+// let logout = false;
+
+const AuthNavigator = createStackNavigator({
+    Auth: AuthScreen
+}, {
+    navigationOptions: {
+        drawerIcon: drawerConfig => (
+            <Ionicons
+                name='md-exit'
+                size={23}
+                color={drawerConfig.tintColor}
+            />
+        )
+    },
+    defaultNavigationOptions: defaultNavOptions
+});
+
 const ShopNavigator = createDrawerNavigator({
     Products: ProductsNavigator,
     Orders: OrdersNavigator,
-    Admin: AdminNavigator
+    Admin: AdminNavigator,
+    Logout: AuthNavigator
 }, {
     contentOptions: {
         activeTintColor: Colors.primary,
     },
     contentComponent: props => {
+        const dispatch = useDispatch();
         return (
             <View style={styles.statusBarMarginEdition}>
-                <DrawerItems {...props} />
+                {/* <SafeAreaView forceInset={{
+                    top: 'always',
+                    horizontal: 'never'
+                }}> */}
+                <DrawerItems
+                    {...props}
+                    onItemPress={({ route, focused }) => {
+                        if (route.key === 'Logout') {
+                            dispatch(logout());
+                        } else {
+                            props.onItemPress({ route, focused });
+                        }
+                    }}
+                />
+                {/* <Button
+                        title="logout"
+                        color={Colors.primary}
+                        onPress={() => { 
+                            dispatch(logout());
+                            props.navigation.navigate('Auth');
+                        }}
+                    /> */}
+                {/* </SafeAreaView> */}
             </View>
         );
     }
@@ -94,8 +142,13 @@ const ShopNavigator = createDrawerNavigator({
 
 const styles = StyleSheet.create({
     statusBarMarginEdition: {
-        marginTop: Constants.statusBarHeight
+        marginTop: Constants.statusBarHeight,
     }
 });
 
-export default createAppContainer(ShopNavigator);
+const MainNavigator = createSwitchNavigator({
+    Auth: AuthNavigator,
+    Shop: ShopNavigator,
+});
+
+export default createAppContainer(MainNavigator);

@@ -1,14 +1,20 @@
-import PRODUCTS from '../../data/dummy-data';
+// import PRODUCTS from '../../data/dummy-data';
 import * as actions from '../actions/products';
 import Product from '../../models/product';
 
 const initialState = {
-    availableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(p => p.ownerId === 'u1')
+    availableProducts: [],
+    userProducts: []
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        case actions.SET_PRODUCTS:
+            return {
+                availableProducts: action.products,
+                userProducts: action.products.filter(p => p.ownerId === action.userId)
+            };
+
         case actions.DELETE_PRODUCT:
             return {
                 ...state,
@@ -22,8 +28,8 @@ export default (state = initialState, action) => {
 
         case actions.CREATE_PRODUCT:
             const newProd = new Product(
-                new Date().toString(),
-                'u1',
+                action.prodData.id,
+                action.prodData.ownerId,
                 action.prodData.title,
                 action.prodData.imageUrl,
                 action.prodData.description,

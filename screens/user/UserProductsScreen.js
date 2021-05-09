@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, Button, View, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -6,8 +6,11 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import ProductItem from '../../components/shop/ProductItem';
 import Colors from '../../contants/Colors';
 import * as actions from '../../store/actions/products';
+import Spinner from '../../components/UI/Spinner';
+import EmptyText from '../../components/UI/EmptyText';
 
 const UserProductScreen = props => {
+    const [isLoading, setIsLoading] = useState(false);
     const userProducts = useSelector(state => state.products.userProducts);
     const dispatch = useDispatch();
 
@@ -26,11 +29,25 @@ const UserProductScreen = props => {
                 {
                     text: "YES",
                     style: "destructive",
-                    onPress: () => {
-                        dispatch(actions.deleteProduct(id));
+                    onPress: async () => {
+                        setIsLoading(true);
+                        await dispatch(actions.deleteProduct(id));
+                        setIsLoading(false);
                     }
                 }
             ]
+        );
+    };
+
+    if (isLoading) {
+        return <Spinner />
+    };
+
+    if (userProducts.length === 0) {
+        return (
+            <EmptyText>
+                No products found, maybe start creating some?
+            </EmptyText>
         );
     };
 
