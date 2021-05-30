@@ -12,10 +12,9 @@ export const fetchProducts = () => {
             const response = await fetch(
                 'https://rn-based-shop-app-default-rtdb.europe-west1.firebasedatabase.app/products.json'
             );
-
             if (!response.ok) {
                 throw new Error('Something went wrong!');
-            }
+            }   
 
             const resData = await response.json();
             const loadedProds = [];

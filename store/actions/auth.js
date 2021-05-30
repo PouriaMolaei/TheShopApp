@@ -60,10 +60,10 @@ export const signup = (email, password) => {
     const expiresIn = parseInt(resData.expiresIn) * 1000;
 
     dispatch(authenticate(
-      resData.idToken, 
+      resData.idToken,
       resData.localId,
       expiresIn
-      ));
+    ));
 
     const expDate = new Date(
       new Date().getTime() + expiresIn
@@ -112,10 +112,10 @@ export const login = (email, password) => {
     const expiresIn = parseInt(resData.expiresIn) * 1000;
 
     dispatch(authenticate(
-      resData.idToken, 
-      resData.localId, 
+      resData.idToken,
+      resData.localId,
       expiresIn
-      ));
+    ));
 
     const expDate = new Date(
       new Date().getTime() + expiresIn
@@ -136,7 +136,9 @@ let timer;
 
 export const logout = () => {
   AsyncStorage.removeItem('userData');
+
   if (timer) clearTimeout(timer);
+
   return { type: LOGUOT };
 };
 

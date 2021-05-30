@@ -3,7 +3,7 @@ import { StatusBar } from 'react-native';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
-import NavContainer from './navigation/NavContainer';
+import AppNavigator from './navigation/AppNavigator';
 import Apploading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 // import { composeWithDevTools } from 'redux-devtools-extension';
@@ -39,7 +39,7 @@ export default function App() {
         backgroundColor="rgba(0, 0, 0, 0.3)"
         translucent
       />
-      <NavContainer />
+      <AppNavigator />
     </Provider>
   );
 }

@@ -46,7 +46,8 @@ const EditProductScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
 
-    const pid = props.navigation.getParam('pid');
+    const routeParams = props.route.params ? props.route.params : {};
+    const pid = routeParams.pid;
     const userProd = useSelector(state =>
         state.products.userProducts.find(prod => prod.id === pid)
     );
@@ -108,13 +109,23 @@ const EditProductScreen = props => {
             Alert.alert(
                 'An error occurred!',
                 error,
-                [{ text: 'Okay' }]  
+                [{ text: 'Okay' }]
             );
         };
     }, [error]);
 
     useEffect(() => {
-        props.navigation.setParams({ submit: submitProdHandler });
+        props.navigation.setOptions({
+            headerRight: () => (
+                <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item
+                        title="Save"
+                        iconName="md-checkmark"
+                        onPress={submitProdHandler}
+                    />
+                </HeaderButtons>
+            )
+        });
     }, [submitProdHandler]);
 
     const inputChangeHandler = useCallback((id, inputValue, inputIsValid) => {
@@ -195,21 +206,12 @@ const EditProductScreen = props => {
     );
 };
 
-EditProductScreen.navigationOptions = navData => {
-    const submitFn = navData.navigation.getParam('submit');
+export const screenOptions = navData => {
+    const routeParams = navData.route.params ? navData.route.params : {};
     return {
-        headerTitle: navData.navigation.getParam('pid')
+        headerTitle: routeParams.pid
             ? 'Edit Product'
             : 'Add Product',
-        headerRight: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName="md-checkmark"
-                    onPress={submitFn}
-                />
-            </HeaderButtons>
-        )
     };
 };
 
