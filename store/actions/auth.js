@@ -134,10 +134,10 @@ const saveDateToStorage = (token, userId, expDate) => {
 
 let timer;
 
-export const logout = () => {
-  AsyncStorage.removeItem('userData');
-
+export const logout = async () => {
   if (timer) clearTimeout(timer);
+
+  await AsyncStorage.removeItem('userData');
 
   return { type: LOGUOT };
 };

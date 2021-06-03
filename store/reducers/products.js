@@ -34,6 +34,7 @@ export default (state = initialState, action) => {
                 action.prodData.imageUrl,
                 action.prodData.description,
                 action.prodData.price,
+                action.prodData.pushToken,
             );
 
             return {
@@ -55,7 +56,8 @@ export default (state = initialState, action) => {
                 action.prodData.title,
                 action.prodData.imageUrl,
                 action.prodData.description,
-                state.availableProducts[prodIndex].price
+                state.availableProducts[prodIndex].price,
+                state.availableProducts[prodIndex].pushToken,
             );
             const updatedProds = [...state.availableProducts];
             updatedProds[prodIndex] = updatedProd;

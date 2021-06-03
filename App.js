@@ -6,11 +6,21 @@ import ReduxThunk from 'redux-thunk';
 import AppNavigator from './navigation/AppNavigator';
 import Apploading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
+import * as Notifications from "expo-notifications";
 // import { composeWithDevTools } from 'redux-devtools-extension';
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
 import authReducer from './store/reducers/auth';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldSetBadge: true
+    };
+  }
+});
 
 const rootReducer = combineReducers({
   products: productReducer,
